@@ -39,9 +39,6 @@ public class ModConfig {
     public String prefix = "§e[BRIDGE]";
 
     @SerialEntry
-    public String botIGN = "IsleofDucks";
-
-    @SerialEntry
     public Color playerNameColor = Color.CYAN;
 
     public static Screen configScreen(Screen parent) {

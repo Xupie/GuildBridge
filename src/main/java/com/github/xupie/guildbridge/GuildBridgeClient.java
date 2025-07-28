@@ -19,6 +19,6 @@ public class GuildBridgeClient implements ClientModInitializer {
             TestBridgeCommand.register(dispatcher);
             TestGuildCommand.register(dispatcher);
         }));
-        ClientReceiveMessageEvents.GAME.register(GuildBridge::register);
+        ClientReceiveMessageEvents.MODIFY_GAME.register(GuildBridge::register);
     }
 }
