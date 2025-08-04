@@ -14,66 +14,76 @@ public class GuildBridge {
     //§2Guild > §a[VIP§6+§a] Xupie §e[EMBER]§f: b
     //§2Guild > §bDOGPLAYZ §ejoined.
     //§2Guild > §6Ducksicle §eleft.
+    //Guild > [VIP+] MangoMilkshake [STAFF]: ✧EmanCarrier ᴹᴼᴰ: Test
     public static final Pattern GUILD_BRIDGE_MESSAGE_PATTERN = Pattern.compile("^§2Guild > .*?\\w+ §.\\[\\w+]§f: ✧ ✧?(\\w+).*?: (.*)$");
     public static final Pattern GUILD_MESSAGE_PATTERN = Pattern.compile("^§2Guild > (.*?(?: |§f)(\\w+)) §.\\[\\w+]§f: (?!✧)(.*)$");
     public static final Pattern GUILD_JOIN_LEFT = Pattern.compile("^§2Guild > §.\\w+ §.(?:joined|left)\\.$");
 
+    private static final String GUILD_PREFIX = "§2Guild >";
+    private static final String GUILD_PREFIX_COMPACT = "§2G>";
+    private static final String BRIDGE_PREFIX_COMPACT = "§2B>";
+    private static final String BRIDGE_PREFIX_FULL = "§2Bridge >";
+
     public static Text register(Text textMessage, boolean b) {
         String msg = textMessage.getString();
+        ModConfig config = ModConfig.HANDLER.instance();
 
         Matcher bridgeMatcher = GUILD_BRIDGE_MESSAGE_PATTERN.matcher(msg);
         if (bridgeMatcher.matches()) {
-            String player = bridgeMatcher.group(1);
-            String message = bridgeMatcher.group(2);
-
-            String compact = ModConfig.HANDLER.instance().compactGuildMessage ? "§2B>" : "§2Bridge >";
-            String rank = ModConfig.HANDLER.instance().addRank ? " " + ModConfig.HANDLER.instance().rank : "";
-            String prefix = ModConfig.HANDLER.instance().addPrefix ? " " + ModConfig.HANDLER.instance().prefix : "";
-
-            Color playerNameColor = ModConfig.HANDLER.instance().playerNameColor;
-            TextColor textColor = TextColor.fromRgb(playerNameColor.getRGB());
-
-            Text newMessage = Text.literal(compact + rank + " ")
-                .append(Text.literal(player + prefix)
-                    .styled(style -> style
-                        .withColor(textColor)
-                        .withUnderline(false)
-                    ))
-                .append("§f: " + message)
-                .styled(style -> style
-                    .withClickEvent(new ClickEvent.RunCommand("/pv " + player))
-                    .withHoverEvent(new HoverEvent.ShowText(Text.literal("§eClick here to run /pv " + player)))
-                    .withUnderline(true)
-                    .withColor(Formatting.AQUA)
-                );
-            return newMessage;
+            return handleBridgeMessage(bridgeMatcher.group(1), bridgeMatcher.group(2), config);
         }
 
         Matcher guildMessage = GUILD_MESSAGE_PATTERN.matcher(msg);
         if (guildMessage.matches()) {
-            if (ModConfig.HANDLER.instance().compactGuildMessage) {
-                msg = msg.replace("§2Guild >", "§2G>");
-            }
-
-            String player = guildMessage.group(2);
-            Text newMessage = Text.literal(msg)
-                .styled(style -> style
-                    .withClickEvent(new ClickEvent.RunCommand("/pv " + player))
-                    .withHoverEvent(new HoverEvent.ShowText(Text.literal("§eClick here to run /pv " + player)))
-                    .withUnderline(true)
-                    .withColor(Formatting.AQUA)
-                );
-            return newMessage;
+            return handleGuildMessage(guildMessage.group(2), msg, config);
         }
 
         Matcher joinMessage = GUILD_JOIN_LEFT.matcher(msg);
-        if (joinMessage.matches()) {
-            if (ModConfig.HANDLER.instance().compactGuildMessage) {
-                Text newMessage = Text.literal(msg.replace("§2Guild >", "§2G>"));
-                return newMessage;
-            }
+        if (joinMessage.matches() && config.compactGuildMessage) {
+            return Text.literal(msg.replace(GUILD_PREFIX, GUILD_PREFIX_COMPACT));
         }
 
         return textMessage;
+    }
+
+    private static Text handleBridgeMessage(String player, String message, ModConfig config) {
+        String compact = config.compactGuildMessage ? BRIDGE_PREFIX_COMPACT : BRIDGE_PREFIX_FULL;
+        String rank = config.addRank && config.rank != null ? " " + config.rank : "";
+        String prefix = config.addPrefix && config.prefix != null ? " " + config.prefix : "";
+
+        Color playerNameColor = config.playerNameColor;
+        TextColor textColor = playerNameColor != null
+            ? TextColor.fromRgb(playerNameColor.getRGB())
+            : TextColor.fromFormatting(Formatting.AQUA);
+
+        Text newMessage = Text.empty()
+            .append(Text.literal(compact + rank + " "))
+            .append(Text.literal(player + prefix).styled(style -> style
+                .withColor(textColor)
+                .withUnderline(false)
+            ))
+            .append("§f: " + message)
+            .styled(style -> createPlayerStyle(player));
+
+        return newMessage;
+    }
+
+    private static Text handleGuildMessage(String player, String message, ModConfig config) {
+        if (config.compactGuildMessage) {
+            message = message.replace(GUILD_PREFIX, GUILD_PREFIX_COMPACT);
+        }
+
+        Text newMessage = Text.literal(message)
+            .styled(style -> createPlayerStyle(player));
+
+        return newMessage;
+    }
+
+    private static Style createPlayerStyle(String player) {
+        return Style.EMPTY
+            .withClickEvent(new ClickEvent.RunCommand("/pv " + player))
+            .withHoverEvent(new HoverEvent.ShowText(Text.literal("§eClick here to run /pv " + player)))
+            .withUnderline(true)
+            .withColor(Formatting.AQUA);
     }
 }
