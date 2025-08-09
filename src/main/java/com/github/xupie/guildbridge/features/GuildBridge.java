@@ -14,8 +14,8 @@ public class GuildBridge {
     //§2Guild > §a[VIP§6+§a] Xupie §e[EMBER]§f: b
     //§2Guild > §bDOGPLAYZ §ejoined.
     //§2Guild > §6Ducksicle §eleft.
-    //Guild > [VIP+] MangoMilkshake [STAFF]: ✧EmanCarrier ᴹᴼᴰ: Test
-    public static final Pattern GUILD_BRIDGE_MESSAGE_PATTERN = Pattern.compile("^§2Guild > .*?\\w+ §.\\[\\w+]§f: ✧ ✧?(\\w+).*?: (.*)$");
+    //§2Guild > §a[VIP§6+§a] MangoMilkshake §e[STAFF]§f: ✧EmanCarrier ᴹᴼᴰ: Test
+    public static final Pattern GUILD_BRIDGE_MESSAGE_PATTERN = Pattern.compile("^§2Guild > .*?\\w+ §.\\[\\w+]§f: ✧ ?✧?(\\w+).*?: (.*)");
     public static final Pattern GUILD_MESSAGE_PATTERN = Pattern.compile("^§2Guild > (.*?(?: |§f)(\\w+)) §.\\[\\w+]§f: (?!✧)(.*)$");
     public static final Pattern GUILD_JOIN_LEFT = Pattern.compile("^§2Guild > §.\\w+ §.(?:joined|left)\\.$");
 
@@ -56,7 +56,7 @@ public class GuildBridge {
             ? TextColor.fromRgb(playerNameColor.getRGB())
             : TextColor.fromFormatting(Formatting.AQUA);
 
-        Text newMessage = Text.empty()
+        return Text.empty()
             .append(Text.literal(compact + rank + " "))
             .append(Text.literal(player + prefix).styled(style -> style
                 .withColor(textColor)
@@ -64,8 +64,6 @@ public class GuildBridge {
             ))
             .append("§f: " + message)
             .styled(style -> createPlayerStyle(player));
-
-        return newMessage;
     }
 
     private static Text handleGuildMessage(String player, String message, ModConfig config) {
@@ -73,10 +71,8 @@ public class GuildBridge {
             message = message.replace(GUILD_PREFIX, GUILD_PREFIX_COMPACT);
         }
 
-        Text newMessage = Text.literal(message)
+        return Text.literal(message)
             .styled(style -> createPlayerStyle(player));
-
-        return newMessage;
     }
 
     private static Style createPlayerStyle(String player) {
