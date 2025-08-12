@@ -1,6 +1,5 @@
 package com.github.xupie.guildbridge.commands;
 
-import com.github.xupie.guildbridge.config.ModConfig;
 import com.github.xupie.guildbridge.features.GuildBridge;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
@@ -22,7 +21,7 @@ public final class TestBridgeCommand {
     }
 
     private static int broadcast(CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
-        GuildBridge.register(Text.literal("§2Guild > §b[MVP§c+§b] IsleofDucks §e[STAFF]§f: ✧ Xupie: b"), true);
+        GuildBridge.register(Text.literal("§2Guild > §b[MVP§c+§b] IsleofDucks §e[STAFF]§f: Xupie: b"), true);
         return Command.SINGLE_SUCCESS;
     }
 }
