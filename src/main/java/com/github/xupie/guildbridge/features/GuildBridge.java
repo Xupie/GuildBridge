@@ -15,7 +15,7 @@ public class GuildBridge {
     //§2Guild > §bDOGPLAYZ §ejoined.
     //§2Guild > §6Ducksicle §eleft.
     //§2Guild > §a[VIP§6+§a] MangoMilkshake §e[STAFF]§f: ✧EmanCarrier ᴹᴼᴰ: Test
-    public static final Pattern GUILD_BRIDGE_MESSAGE_PATTERN = Pattern.compile("^§2Guild > .*?\\w+ §.\\[\\w+]§f: ✧?(\\w+).*?: (.*)");
+    public static final Pattern GUILD_BRIDGE_MESSAGE_PATTERN = Pattern.compile("^§2Guild > .*?\\w+ §.\\[\\w+]§f: ✧?(\\w+)(?: \\S*)?: (.*)$");
     public static final Pattern GUILD_MESSAGE_PATTERN = Pattern.compile("^§2Guild > (.*?(?: |§f)(\\w+)) §.\\[\\w+]§f: (?!✧)(.*)$");
     public static final Pattern GUILD_JOIN_LEFT = Pattern.compile("^§2Guild > §.\\w+ §.(?:joined|left)\\.$");
 
