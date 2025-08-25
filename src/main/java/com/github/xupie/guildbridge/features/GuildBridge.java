@@ -15,7 +15,7 @@ public class GuildBridge {
     //§2Guild > §bDOGPLAYZ §ejoined.
     //§2Guild > §6Ducksicle §eleft.
     //§2Guild > §a[VIP§6+§a] MangoMilkshake §e[STAFF]§f: ✧EmanCarrier ᴹᴼᴰ: Test
-    public static final Pattern GUILD_BRIDGE_MESSAGE_PATTERN = Pattern.compile("^§2Guild > .*?\\w+ §.\\[\\w+]§f: ✧?(\\w+)(?: \\S*)?: (.*)$");
+    public static final Pattern GUILD_BRIDGE_MESSAGE_PATTERN = Pattern.compile("^§2Guild > .*?(\\w+) §.\\[\\w+]§f: ✧?(\\w+)(?: \\S*)*: (.*)$");
     public static final Pattern GUILD_MESSAGE_PATTERN = Pattern.compile("^§2Guild > (.*?(?: |§f)(\\w+)) §.\\[\\w+]§f: (?!✧)(.*)$");
     public static final Pattern GUILD_JOIN_LEFT = Pattern.compile("^§2Guild > §.\\w+ §.(?:joined|left)\\.$");
 
@@ -29,8 +29,8 @@ public class GuildBridge {
         ModConfig config = ModConfig.HANDLER.instance();
 
         Matcher bridgeMatcher = GUILD_BRIDGE_MESSAGE_PATTERN.matcher(msg);
-        if (bridgeMatcher.matches()) {
-            return handleBridgeMessage(bridgeMatcher.group(1), bridgeMatcher.group(2), config);
+        if (bridgeMatcher.matches() && bridgeMatcher.group(1).equals(config.botIGN.trim())) {
+            return handleBridgeMessage(bridgeMatcher.group(2), bridgeMatcher.group(3), config);
         }
 
         Matcher guildMessage = GUILD_MESSAGE_PATTERN.matcher(msg);

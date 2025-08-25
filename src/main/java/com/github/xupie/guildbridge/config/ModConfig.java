@@ -24,6 +24,9 @@ public class ModConfig {
         .build();
 
     @SerialEntry
+    public String botIGN = "IsleofDucks";
+
+    @SerialEntry
     public boolean compactGuildMessage = false;
 
     @SerialEntry
@@ -41,11 +44,22 @@ public class ModConfig {
     @SerialEntry
     public Color playerNameColor = Color.CYAN;
 
+    @SerialEntry
+    public boolean autoWelcome = true;
+
     public static Screen configScreen(Screen parent) {
         return YetAnotherConfigLib.create(HANDLER, (((defaults, config, builder) -> builder
             .title(Text.literal("Guild Bridge Config"))
             .category(ConfigCategory.createBuilder()
                 .name(Text.literal("General"))
+
+                // bot IGN
+                .option(Option.<String>createBuilder()
+                    .name(Text.literal("Bot IGN"))
+                    .binding("IsleofDucks", () -> config.botIGN, newVal -> config.botIGN = newVal)
+                    .description(OptionDescription.of(Text.literal("")))
+                    .controller(StringControllerBuilder::create)
+                    .build())
 
                 // Compact Guild Message
                 .option(Option.<Boolean>createBuilder()
@@ -96,6 +110,15 @@ public class ModConfig {
                     .binding(Color.CYAN, () -> config.playerNameColor, newVal -> config.playerNameColor = newVal)
                     .description(OptionDescription.of(Text.literal("")))
                     .controller(ColorControllerBuilder::create)
+                    .build())
+
+                // Compact Guild Message
+                .option(Option.<Boolean>createBuilder()
+                    .name(Text.literal("Auto Welcome Ducksicle"))
+                    .binding(false, () -> config.autoWelcome, newVal -> config.autoWelcome = newVal)
+                    .description(OptionDescription.of(Text.literal("")))
+                    .controller(opt -> BooleanControllerBuilder.create(opt)
+                        .coloured(true))
                     .build())
 
                 .build()
