@@ -28,13 +28,13 @@ public class AutoWelcome {
                         message = "Welcome Princess!";
                     }
 
-                    client.execute(() -> {
+                    new Thread(() -> {
                         try {
                             Thread.sleep(1000);
                             client.player.networkHandler.sendCommand("gchat " + message);
                             lastWelcome = System.currentTimeMillis();
                         } catch (InterruptedException ignored) {}
-                    });
+                    }).start();
                 }
             }
         }
