@@ -14,7 +14,7 @@ public class AutoWelcome {
     public static Text register(Text textMessage, boolean b) {
         if (!ModConfig.HANDLER.instance().autoWelcome) return textMessage;
 
-        if (System.currentTimeMillis() - lastWelcome >= 60_000) {
+        if (System.currentTimeMillis() - lastWelcome >= 300_000) {
             if (Formatting.strip(textMessage.getString()).equals("Guild > Ducksicle joined.")) {
                 MinecraftClient client = MinecraftClient.getInstance();
 
@@ -28,8 +28,13 @@ public class AutoWelcome {
                         message = "Welcome Princess!";
                     }
 
-                    client.player.networkHandler.sendCommand("gchat " + message);
-                    lastWelcome = System.currentTimeMillis();
+                    client.execute(() -> {
+                        try {
+                            Thread.sleep(1000);
+                            client.player.networkHandler.sendCommand("gchat " + message);
+                            lastWelcome = System.currentTimeMillis();
+                        } catch (InterruptedException ignored) {}
+                    });
                 }
             }
         }
