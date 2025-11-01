@@ -31,7 +31,7 @@ public class AutoWelcome {
                     new Thread(() -> {
                         try {
                             Thread.sleep(1000);
-                            client.player.networkHandler.sendCommand("gchat " + message);
+                            client.player.networkHandler.sendChatCommand("gchat " + message);
                             lastWelcome = System.currentTimeMillis();
                         } catch (InterruptedException ignored) {}
                     }).start();
